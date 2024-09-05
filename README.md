@@ -2,7 +2,7 @@
 
 <image src="docs/image.png" width="400">
 
-> tEXT RePLaCE -> replect -> replex
+> Find tEXT and RePLaCE -> reflect -> replex
 
 텍스트에 포함된 특정 키워드 A를 B로 변경하는 프로그램입니다.
 
