@@ -28,6 +28,7 @@ ENSURE_PATH_LIST = [
     SEPARATED_WORD_PATH,
 ]
 
+ALLOWED_ENCODING = Environment.ALLOWED_ENCODING
 SLEEP_BEFORE_GETTING_STARTED = Environment.SLEEP_BEFORE_GETTING_STARTED
 REPLACE_MAP = Environment.REPLACE_MAP
 EXTENSION = Environment.EXTENSION
@@ -279,9 +280,17 @@ def read_file(
     """
     파일을 읽어서 내용을 반환합니다.
     """
-    with open(filepath, mode="r", encoding="utf-8") as f:
-        logger.info("🟡 파일 내용 읽음 -> %s ", filepath)
-        return f.read()
+    for encoding in ALLOWED_ENCODING:
+        with open(filepath, mode="r", encoding=encoding) as f:
+            logger.info("🟡 파일 내용 읽음 -> %s ", filepath)
+            try:
+                return f.read()
+            except UnicodeDecodeError:
+                logger.debug("🟡 %s 인코딩으로 읽기 실패", encoding)
+                continue
+    logger.error("🔴 파일 읽기 실패 -> %s", filepath)
+    logger.error("🔴 프로그램을 종료합니다.")
+    raise UnicodeDecodeError
 
 def find_similler_words(
     filepath: Annotated[pathlib.Path, "파일 이름, redundant"],

@@ -27,3 +27,9 @@ class Environment:
         "Apple": "Banana",
         "APPLE": "BANANA",
     }
+
+    ALLOWED_ENCODING = [
+        "utf-8",
+        "cp949",
+        "euc-kr",
+    ]
