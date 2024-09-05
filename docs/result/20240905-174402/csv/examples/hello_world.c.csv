@@ -1,0 +1,4 @@
+filename	line	pos	keyword	original_text
+hello_world.c	3	11	apple	void hello_apple() {
+hello_world.c	4	19	Apple	    printf("Hello, Apple!\n");
+hello_world.c	12	10	apple	    hello_apple();
