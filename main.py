@@ -128,14 +128,16 @@ def get_relative_target_path(
             relative_path = pathlib.Path(*relative_path.parts[1:])
     except ValueError:
         # NOTE: subpath가 아닌경우
-        relative_path = f"{target_path.as_posix()}/{dir_path.absolute()}"
+        match platform.system():
+            case "Windows":
+                absolute_path = dir_path.absolute()
+                # NOTE: 드라이브 경로를 포함하면서 콜론이 포함되어 경로 계산시 에러발생
+                colon_removed_path = absolute_path.replace(":", "")
+                relative_path = f"{target_path.as_posix()}/{colon_removed_path}"
+            case _:
+                relative_path = f"{target_path.as_posix()}/{dir_path.absolute()}"
 
-
-    relative_target_path = (
-        target_path
-        / relative_path
-        / f"{filepath.name}"
-    )
+    relative_target_path = target_path / relative_path / f"{filepath.name}"
     ensure_path_exists(relative_target_path.parent)
     return relative_target_path
 
