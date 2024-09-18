@@ -293,9 +293,10 @@ def read_file(
             except UnicodeDecodeError:
                 logger.debug("🟡 %s 인코딩으로 읽기 실패", encoding)
                 continue
-    logger.error("🔴 파일 읽기 실패 -> %s", filepath)
-    logger.error("🔴 프로그램을 종료합니다.")
-    raise UnicodeDecodeError
+    with open(filepath, mode="r", encoding="utf-8", errors="ignore") as f:
+        logger.warning("🟡 지원하지 않는 문자열 확인 -> %s ", filepath)
+        logger.warning("🟡 기록된 파일과 원본을 대조해주세요")
+        return f.read()
 
 
 def find_similler_words(
