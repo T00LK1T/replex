@@ -1,12 +1,14 @@
-import os
-import re
 import json
 import logging
+import os
 import pathlib
+import platform
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from time import sleep
 from typing import Annotated
+
 from settings import Environment
 
 BASE_PATH = pathlib.Path(__file__).parent
@@ -97,15 +99,14 @@ class KeywordMeta:
 
 
 def get_all_paths_with_symlinks(
-    directory: pathlib.Path,
-    extensions: list[str]
+    directory: pathlib.Path, extensions: list[str]
 ) -> list[pathlib.Path]:
     all_paths = []
     for root, dirs, files in os.walk(directory, followlinks=True):
         for name in dirs + files:
             full_path = os.path.realpath(os.path.join(root, name))
             path_obj = pathlib.Path(full_path)
-            if extensions: # 확장자 필터링
+            if extensions:  # 확장자 필터링
                 if path_obj.is_file() and path_obj.suffix[1:] in extensions:
                     all_paths.append(path_obj)
             else:
@@ -263,6 +264,7 @@ def save_textbook(
     logger.debug("🟢 각 파일의 텍스트북을 저장했습니다.")
     logger.debug("\t%s", textbook_path)
 
+
 def save_unique_textbook():
     """
     글로벌 선언된 unique_text_set을 참조하여 텍스트북을 저장합니다.
@@ -275,6 +277,7 @@ def save_unique_textbook():
             f.write(f"{text}\n")
     logger.debug("🟢 전체 텍스트북의 고유값만 추출하여 저장했습니다.")
     logger.debug("\t%s", unique_text_path)
+
 
 def read_file(
     filepath: Annotated[pathlib.Path, "파일 경로"],
@@ -293,6 +296,7 @@ def read_file(
     logger.error("🔴 파일 읽기 실패 -> %s", filepath)
     logger.error("🔴 프로그램을 종료합니다.")
     raise UnicodeDecodeError
+
 
 def find_similler_words(
     filepath: Annotated[pathlib.Path, "파일 이름, redundant"],
@@ -340,14 +344,16 @@ def find_keyword(
     text: Annotated[str, "파일 내용"],
     target_keyword: Annotated[str, "찾을 키워드"],
     protected_keywords: Annotated[list[str], "보호할 키워드 리스트"],
-) -> Annotated[tuple[list[KeywordMeta], list[KeywordMeta]], "키워드 위치, 텍스트북 목록"]:
+) -> Annotated[
+    tuple[list[KeywordMeta], list[KeywordMeta]], "키워드 위치, 텍스트북 목록"
+]:
     """
     텍스트에서 키워드를 찾아서 위치 정보를 반환합니다.
 
     이 과정에서 protected_keywords에 포함된 키워드는 무시합니다.
     """
     keywords_ = []
-    temp_textbook_list_ =[]
+    temp_textbook_list_ = []
 
     lines = text.split("\n")
 
@@ -393,7 +399,9 @@ def find_keywords(
     text: Annotated[str, "파일 내용"],
     target_keywords: Annotated[list[str], "찾을 키워드 리스트"],
     protected_keywords: Annotated[list[str], "보호할 키워드 리스트"],
-) -> Annotated[tuple[list[KeywordMeta], list[KeywordMeta]], "키워드 위치, 텍스트북 목록"]:
+) -> Annotated[
+    tuple[list[KeywordMeta], list[KeywordMeta]], "키워드 위치, 텍스트북 목록"
+]:
     keywords_ = []
     temp_textbook_list_ = []
     for keyword in target_keywords:
@@ -406,6 +414,7 @@ def find_keywords(
         keywords_ += keywords
         temp_textbook_list_ += textbook_list
     return keywords_, temp_textbook_list_
+
 
 def ensure_path_exists(path: Annotated[pathlib.Path, "디렉터리 경로"]):
     """
