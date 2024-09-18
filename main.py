@@ -133,7 +133,7 @@ def get_relative_target_path(
             case "Windows":
                 absolute_path = dir_path.absolute()
                 # NOTE: 드라이브 경로를 포함하면서 콜론이 포함되어 경로 계산시 에러발생
-                colon_removed_path = absolute_path.replace(":", "")
+                colon_removed_path = absolute_path.as_posix().replace(":", "")
                 relative_path = f"{target_path.as_posix()}/{colon_removed_path}"
             case _:
                 relative_path = f"{target_path.as_posix()}/{dir_path.absolute()}"
