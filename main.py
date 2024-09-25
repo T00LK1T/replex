@@ -460,7 +460,7 @@ def _replace_keyword(
                 target_pos_list.append((keyword, pos))
         sorted_target_pos_list = sorted(target_pos_list, key=lambda x: x[1])
         for keyword, pos in sorted_target_pos_list:
-            logger.info("keyword, pos -> %s, %s", keyword, pos)
+            logger.debug("keyword, pos -> %s, %s", keyword, pos)
             pos += accumulated_pos_delta
             # len(REPLACE_MAP[keyword])는 모두 다름
             new_keyword = REPLACE_MAP[keyword]
