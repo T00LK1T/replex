@@ -453,9 +453,20 @@ def _replace_keyword(
         if i not in line_pos_map:
             new_lines.append(line)
             continue
+        accumulated_pos_delta = 0
+        target_pos_list = []
         for keyword, pos_list in line_pos_map[i].items():
             for pos in pos_list:
-                line = line[:pos] + REPLACE_MAP[keyword] + line[pos + len(keyword) :]
+                target_pos_list.append((keyword, pos))
+        sorted_target_pos_list = sorted(target_pos_list, key=lambda x: x[1])
+        for keyword, pos in sorted_target_pos_list:
+            logger.info("keyword, pos -> %s, %s", keyword, pos)
+            pos += accumulated_pos_delta
+            # len(REPLACE_MAP[keyword])는 모두 다름
+            new_keyword = REPLACE_MAP[keyword]
+            new_keyword_len = len(new_keyword)
+            line = line[:pos] + new_keyword + line[pos + len(keyword):]
+            accumulated_pos_delta += new_keyword_len - len(keyword)
         new_lines.append(line)
     return "\n".join(new_lines)
 
